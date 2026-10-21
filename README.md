@@ -90,11 +90,13 @@ public final class CardEager {
     private final Suit aSuit;
 
     private CardEager(Rank pRank, Suit pSuit) {
+        assert pRank != null && pSuit != null;
         aRank = pRank;
         aSuit = pSuit;
     }
 
     public static CardEager get(Rank pRank, Suit pSuit) {
+        assert pRank != null && pSuit != null;
         return CARDS.get(pRank).get(pSuit);
     }
 
@@ -182,9 +184,9 @@ public class Main {
     public static void main(String[] args) {
         // Khởi động trước để không tính thời gian nạp Rank, Suit và lambda vào kết quả
         measure("Warm-up (bỏ qua)", (r, s) -> r);
-
-        measure("Khởi tạo sẵn (eager)", CardEager::get);
+        
         measure("Khởi tạo muộn (lazy)", CardLazy::get);
+        measure("Khởi tạo sẵn (eager)", CardEager::get);
     }
 }
 ```
@@ -194,7 +196,7 @@ Một số lưu ý về cách đo:
 - Em đo bằng `System.currentTimeMillis()` đúng như đề. Vì 52 đối tượng quá nhỏ nên kết quả chỉ ra 0, 1 hoặc 2 ms, quá thô để so sánh. Em đo thêm bằng `System.nanoTime()` và đổi ra micro giây (µs) để thấy rõ sự khác biệt.
 - Có một lượt chạy khởi động (warm-up) trước để thời gian nạp lớp `Rank`, `Suit` không bị tính vào kết quả của cách nào.
 - Với `CardEager`, lần gọi `get` đầu tiên sẽ nạp lớp và chạy khối `static`, nên chi phí tạo 52 lá nằm trong khoảng thời gian đo.
-- Em chạy **8 lần**: 5 lần với thứ tự eager → lazy, rồi đảo thành lazy → eager và chạy 3 lần, để kiểm tra kết quả không phụ thuộc cái nào chạy trước.
+- Em chạy **8 lần**: 5 lần với thứ tự eager → lazy, rồi đảo thành lazy → eager (như code `main` ở trên) và chạy 3 lần, để kiểm tra kết quả không phụ thuộc cái nào chạy trước.
 
 ---
 

@@ -25,11 +25,13 @@ public final class CardEager {
     private final Suit aSuit;
 
     private CardEager(Rank pRank, Suit pSuit) {
+        assert pRank != null && pSuit != null;
         aRank = pRank;
         aSuit = pSuit;
     }
 
     public static CardEager get(Rank pRank, Suit pSuit) {
+        assert pRank != null && pSuit != null;
         return CARDS.get(pRank).get(pSuit);
     }
 
